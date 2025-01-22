@@ -35,9 +35,7 @@ router.get('/timers', controllerWrapper(timerController.getAll));
 router.get('/timers/active', controllerWrapper(timerController.getActiveTimer));
 router.get('/timers/today', controllerWrapper(timerController.getTodayTimer));
 router.post('/timers', controllerWrapper(timerController.create));
-// Route pour arrêter le timer actif
-// router.patch('/timers/update-objective-historical', controllerWrapper(timerController.updateObjectiveHistorical));
-// router.patch('/timers/stop', controllerWrapper(timerController.stop));
+
 router.patch('/timers/update-and-stop', controllerWrapper(timerController.updateObjectiveHistoricalAndStop));
 
 // router.patch('/timers/:id(\\d+)', controllerWrapper(timerController.updateTimer));
@@ -136,15 +134,6 @@ router.patch('/productions/rejet',(req, res, next)=> {controllerWrapper(rejetCon
 
 // ----------------------update sur l'Article d'un rejet (à l'aide son id venant du req.body)----------------------/
 // router.patch('/productions/rejet', controllerWrapper(rejetController.updateArticleReject));
-
-
-
-
-
-
-
-
-
 
 router.use(error404);
 
