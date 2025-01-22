@@ -15,7 +15,8 @@ const corsOptions = {
       'http://localhost:3000',
       'http://localhost:5173',
       process.env.FRONTEND_URL || 'https://o-clock-mimir.github.io/Kalhyge-prod/',
-      'https://kalhyge-production.surge.sh'
+      'https://kalhyge-production.surge.sh', // Surge
+      'https://kalhyge.vercel.app' // Vercel
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
