@@ -20,7 +20,7 @@ const corsOptions = {
       'https://deploy-front-git-main-jean-manyamas-projects.vercel.app',
       'https://deploy-front-7t7i1xdzt-jean-manyamas-projects.vercel.app',
       'https://deploy-front-3roq77e6z-jean-manyamas-projects.vercel.app',
-      'https://deploy-front-jean-manyamas-projects.vercel.app'
+      'https://deploy-front-jean-manyamas-projects.vercel.app/'
     ];
 
     if (!origin || allowedOrigins.includes(origin)) {
