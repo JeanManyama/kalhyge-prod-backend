@@ -7,11 +7,11 @@ const config = {
 
   database: {
     dialect: process.env.DATABASE_DIALECT || "postgres",
-    host: process.env.DATABASE_HOST || "localhost",      // Adresse du serveur de la BD
-    port: process.env.DATABASE_PORT || 5432,             // Port par défaut de PostgreSQL
-    database: process.env.DATABASE_NAME || "kalhyge-prod", // Nom de la base de données
-    username: process.env.DATABASE_USER || "admin",    // Nom d'utilisateur
-    password: process.env.DATABASE_PASSWORD || '', // Mot de passe
+    host: process.env.DATABASE_HOST || "localhost",     
+    port: process.env.DATABASE_PORT || 5432,             
+    database: process.env.DATABASE_NAME || "kalhyge-prod", 
+    username: process.env.DATABASE_USER || "admin",    
+    password: process.env.DATABASE_PASSWORD || '', 
   },
 
   auth: {

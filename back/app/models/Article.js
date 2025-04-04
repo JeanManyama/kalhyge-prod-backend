@@ -37,10 +37,4 @@ Article.init(
 
 );
 
-// Définir l'association many-to-many avec Machine via Production
-// Article.belongsToMany(Machine, {
-// 	through: Production,
-// 	foreignKey: 'article_id',
-// 	otherKey: 'machine_id',
-// 	as: 'machines', // Alias pour l'association
-// });
+

@@ -1,17 +1,16 @@
 
 
-import tokens from '../lib/tokens.js'; // Assurez-vous que cette fonction soit correctement importée
+import tokens from '../lib/tokens.js'; 
 import config from '../config.js'; 
 
 
-// =========== Authentication middleware ============
+// Authentication middleware 
 export function isAuthenticated(req, res, next) {
   const authorizationHeader = req.headers["Authorization"] || req.headers["authorization"];
 console.log("Le headers ma en envoyé ca----------------------------", authorizationHeader);
-  // Récupérer le token d'accès depuis les cookies ou l'en-tête Authorization
+  // Récupérer le token d'accès depuis l'en-tête Authorization
   const accessToken = req.cookies?.accessToken || req.headers?.["authorization"]?.split("Bearer ")[1];
 
-  // Vérifier si le token d'accès est fourni
   if (!accessToken) {
     return res.status(401).json({ status: 401, message: "Vous n'êtes pas connecter" });
   }

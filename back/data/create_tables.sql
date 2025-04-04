@@ -11,7 +11,7 @@ CREATE TABLE "role"(
 CREATE TABLE "user"(
 	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	"firstname" text NOT NULL,
-	"email" text NOT NULL UNIQUE,
+	"email" varchar(180) NOT NULL UNIQUE,
     "password" text NOT NULL,
     "role_id" int NOT NULL REFERENCES "role"("id") ON DELETE CASCADE,
 	"refresh_token" text,

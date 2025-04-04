@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
-import config from '../config.js'; // Assurez-vous que ce chemin soit correct
+import config from '../config.js'; 
 
 const scrypt = promisify(crypto.scrypt); // Node.js recommande l'utilisation de la version asynchrone de scrypt pour éviter de bloquer la boucle d'événements. Ici, on la "promesifie" pour la lisibilité.
 
