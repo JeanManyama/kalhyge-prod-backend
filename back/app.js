@@ -16,7 +16,7 @@ const corsOptions = {
       'http://localhost:5173',
       process.env.FRONTEND_URL || 'https://o-clock-mimir.github.io/Kalhyge-prod/',
       'https://kalhyge-production.surge.sh', // Surge
-      'https://kalhyge.vercel.app', // Vercel
+      'https://deploy-front-kalhyge.vercel.app', // Vercel
       'https://deploy-front-git-main-jean-manyamas-projects.vercel.app',
       'https://deploy-front-7t7i1xdzt-jean-manyamas-projects.vercel.app',
       'https://deploy-front-3roq77e6z-jean-manyamas-projects.vercel.app',
