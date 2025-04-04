@@ -35,12 +35,7 @@ const corsOptions = {
 };
 
 const io = new socketIo(server, {
-  // cors: corsOptions,
-
-    cors: {
-    origin: true, // permet d'utiliser la logique CORS plus haut
-    credentials: true
-  },
+  cors: corsOptions,
   pingTimeout: 50000,
   pingInterval: 25000,
 });
