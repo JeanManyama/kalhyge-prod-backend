@@ -5,7 +5,7 @@ const schemas = {
     return z.object({
       firstname: z.string().min(1),
       email: z.string().min(1).email(),
-      password: z.string().min(8)
+      password: z.string().min(12)
     });
   },
 
