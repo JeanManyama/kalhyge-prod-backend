@@ -38,7 +38,7 @@ export default {
         // Validation du corps de la requête
         const { data, error } = await schemas.buildSignupBodySchema().safeParseAsync(req.body);
         if (error) {
-          return res.status(400).json({ status: 400, message: error.message });
+          return res.status(409).json({ status: 409, message: "Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres, caractères spéciaux si possible" });
         }
       
         const { firstname, email, password } = data;
