@@ -32,9 +32,9 @@ router.delete('/machines', controllerWrapper(machineController.delete));
 
 // Route pour le timer
 // router.get('/timers', controllerWrapper(timerController.getAll));
-router.get('/timers/active', controllerWrapper(timerController.getActiveTimer));
-router.get('/timers/today', controllerWrapper(timerController.getTodayTimer));
-router.post('/timers', controllerWrapper(timerController.create));
+router.get('/timers/active', isAuthenticated, controllerWrapper(timerController.getActiveTimer));
+router.get('/timers/today', isAuthenticated, controllerWrapper(timerController.getTodayTimer));
+router.post('/timers', isAuthenticated, controllerWrapper(timerController.create));
 
 router.patch('/timers/update-and-stop', controllerWrapper(timerController.updateObjectiveHistoricalAndStop));
 
