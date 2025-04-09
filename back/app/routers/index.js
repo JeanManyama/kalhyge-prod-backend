@@ -64,7 +64,7 @@ router.get('/users/admin',  isAuthenticated, isAdmin, controllerWrapper(userCont
 
 // Route pour la production
 // FETCH ALL GENERALE
-router.get('/productions/:timerId(\\d+)',(req, res, next)=> 
+router.get('/productions/:timerId(\\d+)' , isAuthenticated, (req, res, next)=> 
 {controllerWrapper(productionController.fetchAll.bind(productionController))(req, res, next)
    });
 
