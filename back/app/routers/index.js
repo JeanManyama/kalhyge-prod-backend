@@ -31,7 +31,7 @@ router.patch('/machines', controllerWrapper(machineController.update));
 router.delete('/machines', controllerWrapper(machineController.delete));
 
 // Route pour le timer
-router.get('/timers', controllerWrapper(timerController.getAll));
+// router.get('/timers', controllerWrapper(timerController.getAll));
 router.get('/timers/active', controllerWrapper(timerController.getActiveTimer));
 router.get('/timers/today', controllerWrapper(timerController.getTodayTimer));
 router.post('/timers', controllerWrapper(timerController.create));
@@ -55,7 +55,7 @@ router.delete('/articles/', controllerWrapper(articleController.delete));
 
 // Route pour la Gestion des users
 // router.post('/users', controllerWrapper(userController.create));
-router.get('/users/admin',  controllerWrapper(userController.getAllUsersAdmin));
+router.get('/users/admin',  isAuthenticated, isAdmin, controllerWrapper(userController.getAllUsersAdmin));
  router.delete('/users/admin', controllerWrapper(userController.deleteAdmin));
 
 // router.patch('/users/:id(\\d+)', controllerWrapper(userController.update));

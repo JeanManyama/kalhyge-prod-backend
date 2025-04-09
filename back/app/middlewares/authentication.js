@@ -12,25 +12,25 @@ console.log("Le headers ma en envoyé ca----------------------------", authoriza
   const accessToken = req.cookies?.accessToken || req.headers?.["authorization"]?.split("Bearer ")[1];
 
   if (!accessToken) {
-    return res.status(401).json({ status: 401, message: "Vous n'êtes pas connecter" });
+    return res.status(404).json("Accès non autorisé" );
   }
 
   // Vérifier si le token est valide
   const decodedToken = tokens.verifyJwtToken(accessToken);
   if (!decodedToken) {
-    return res.status(401).json({ status: 401, message: "Invalid access token" });
+    return res.status(404).json("Accès non autorisé");
   }
 
   // Vérification CSRF si activée dans la configuration
   if (config.auth.preventCSRF) {
     const csrfToken = req.headers?.["x-csrf-token"];
     if (!csrfToken) {
-      return res.status(401).json({ status: 401, message: "No csrf token provided in request headers" });
+      return res.status(404).json("Accès non autorisé");
     }
 
     // Vérifier si le CSRF correspond
     if (decodedToken.csrfToken !== csrfToken) {
-      return res.status(401).json({ status: 401, message: "Bad CSRF token provided" });
+      return res.status(404).json("Accès non autorisé");
     }
   }
 
@@ -51,7 +51,7 @@ export async function isAdmin(req, res, next) {
     const decodedToken = tokens.verifyJwtToken(accessToken);
 
     if (!decodedToken || !decodedToken.id) {
-      return res.status(403).json({ status: 403, message: "Accès interdit. Non autorisé." });
+      return res.status(404).json("Accès non autorisé");
     }
 
     // Vérifier si l'utilisateur a un rôle admin
@@ -66,11 +66,11 @@ export async function isAdmin(req, res, next) {
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'Utilisateur non trouvé' });
+      return res.status(404).json("non trouvé");
     }
 
     if (user.role.name !== 'admin') {
-      return res.status(403).json({ message: 'Accès interdit. Non autorisé.' });
+      return res.status(404).json("Accès non autorisé");
     }
 
     // L'utilisateur est un admin, continuer

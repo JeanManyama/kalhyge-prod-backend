@@ -59,7 +59,7 @@ export default {
         });
       
         // Réponse au client
-        res.status(201).json({ status: 201, message: "User successfully created" });
+        res.status(201).json({ status: 201, message: "Le compte a été crée avec succès" });
       },
 // SIGNIN----------------------------------------------
      async  loginUser(req, res) {
@@ -102,16 +102,16 @@ async getUserInfo(req, res) {
     const accessToken = req.headers.authorization?.split(" ")[1];
 
     if (!accessToken) {
-      return res.status(401).json({ status: 401, message: "Token d'accès manquant ou invalide." });
+      return res.status(404).json( "Accès non autorisé");
     }
     // Décoder le token pour récupérer l'identifiant de l'utilisateur
     const decodedToken = tokens.verifyJwtToken(accessToken);
     if (!decodedToken) {
-      return res.status(401).json({ status: 401, message: "Token d'accès invalide ou expiré." });
+      return res.status(404).json( "Accès non autorisé");
     }
     const userId = decodedToken.id;
     if (!userId) {
-      return res.status(401).json({ status: 401, message: "Utilisateur non autorisé." });
+      return res.status(404).json( "Accès non autorisé");
     }
 
     const user = await User.findOne({
