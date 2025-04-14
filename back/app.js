@@ -8,7 +8,7 @@ import { router } from './app/routers/index.js';
 const app = express();
 const server = createServer(app);
 
-// Configuration CORS dynamique
+// Configration CORS dynamique
 const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
