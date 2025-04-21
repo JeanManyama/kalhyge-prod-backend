@@ -18,7 +18,15 @@ const schemas = {
 
   buildRefreshTokenSchema: () => {
     return z.string().min(1);
-  }
+  }, 
+  // Mot de passe oublié
+buildResetPasswordSchema: () => {
+  return z.object({
+    email: z.string().email(),
+    newPassword: z.string().min(12)
+  });
+}
+
 };
 
 export default schemas;

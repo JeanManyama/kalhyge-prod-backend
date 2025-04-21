@@ -22,6 +22,11 @@ router.get('/me', userController.getUserInfo);
 router.post('/logOut', userController.logout);
 router.patch('/update-password', isAuthenticated, userController.updatePassword);
 
+// Mot de passe oublier
+router.post('/send-reset-code', userController.sendResetCode);
+router.post('/validate-reset-code', userController.validateResetCode);
+
+
 // Route pour les machines
 router.get('/machines', isAuthenticated, isAdmin, controllerWrapper(machineController.getAll));
 router.post('/machines', controllerWrapper(machineController.create));

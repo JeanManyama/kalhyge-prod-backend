@@ -3,6 +3,9 @@ import cryptos from '../lib/cryptos.js';
 import config from '../config.js';
 import schemas from '../lib/schemas.js';
 import tokens from '../lib/tokens.js';
+import { sendResetCode } from '../lib/mailer.js';
+
+const resetCodes = new Map(); // Map: email => { code, newPassword, expires }
 
 
 export default {
@@ -183,8 +186,7 @@ async logout(req, res) {
 }
 ,
 
-
-  // UPDATE PASSWORD ----------------------------------------------
+// UPDATE PASSWORD ----------------------------------------------
 async updatePassword(req, res) {  
   try {
     const { password } = req.body;
@@ -217,9 +219,8 @@ async updatePassword(req, res) {
   }
 },
 
-
 // DELETE USER ----------------------------------------------
-    async deleteAdmin(req, res, next){
+async deleteAdmin(req, res, next){
         const {id} = req.body;
 
         const deleted = await User.destroy({where: {id}});
@@ -229,7 +230,83 @@ async updatePassword(req, res) {
         }
 
         res.status(204).json("Suppressions réussie");
-    },
+},
+
+// MOT DE PASSE OUBLIE
+async sendResetCode(req, res) {
+  try {
+  // Validation du corps de la requête
+  const { data, error } = await schemas.buildResetPasswordSchema().safeParseAsync(req.body);
+    if (error) {
+      return res.status(409).json({ status: 409, message: "Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres et caractères spéciaux si possible" });
+    }
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: 'Email et nouveau mot de passe requis.' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur introuvable.' });
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString(); // Code 6 chiffres
+    const hashedPassword = await cryptos.hash(newPassword);
+
+    // Stockage temporaire
+    resetCodes.set(email, {
+      code,
+      newPassword: hashedPassword,
+      expires: Date.now() + 10 * 60 * 1000, // 10 minutes
+    });
+
+    await sendResetCode(email, code);
+
+    res.json({ message: 'Code envoyé par email.' });
+  } catch (err) {
+    console.error('Erreur sendResetCode :', err);
+    res.status(500).json({ message: 'Erreur lors de l’envoi du code.' });
+  }
+},
+async validateResetCode(req, res) {
+  try {
+    const { email, code } = req.body;
+
+    if (!email || !code) {
+      return res.status(400).json({ message: 'Email et code requis.' });
+    }
+
+    const entry = resetCodes.get(email);
+    if (!entry) {
+      return res.status(400).json({ message: 'Aucune demande de réinitialisation trouvée.' });
+    }
+
+    if (entry.expires < Date.now()) {
+      resetCodes.delete(email);
+      return res.status(400).json({ message: 'Code expiré.' });
+    }
+
+    if (entry.code !== code) {
+      return res.status(400).json({ message: 'Code invalide.' });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+
+    user.password = entry.newPassword;
+    await user.save();
+
+    resetCodes.delete(email); // Nettoyage
+    res.json({ message: 'Mot de passe mis à jour avec succès.' });
+  } catch (err) {
+    console.error('Erreur validateResetCode :', err);
+    res.status(500).json({ message: 'Erreur interne du serveur.' });
+  }
+}
+
 };
 
 // RESPONSE HANDLING, TOKENS ----------------------------------

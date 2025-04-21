@@ -3,55 +3,55 @@ BEGIN;
 DROP TABLE IF EXISTS "role", "user", "timer", "machine", "article", "production";
 
 -- Création des tables de base
-CREATE TABLE "role"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"name" text NOT NULL
+CREATE TABLE "role" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE "user"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"firstname" text NOT NULL,
-	"email" varchar(180) NOT NULL UNIQUE,
-    "password" text NOT NULL,
-    "role_id" int NOT NULL REFERENCES "role"("id") ON DELETE CASCADE,
-	"refresh_token" text,
-	"refresh_token_expires_at" TIMESTAMPTZ,
-	"created_at" TIMESTAMPTZ
+CREATE TABLE "user" (
+  "id" SERIAL PRIMARY KEY,
+  "firstname" VARCHAR(100) NOT NULL,
+  "email" VARCHAR(180) NOT NULL UNIQUE,
+  "password" TEXT NOT NULL,
+  "role_id" INTEGER NOT NULL REFERENCES "role"("id") ON DELETE CASCADE,
+  "refresh_token" TEXT,
+  "refresh_token_expires_at" TIMESTAMPTZ,
+  "created_at" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE "timer"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"time_begin" TIMESTAMPTZ NOT NULL,
-	"time_end" TIMESTAMPTZ,
-	"date" date NOT NULL DEFAULT CURRENT_DATE,
-	"status" BOOLEAN DEFAULT FALSE,
-	"user_id" int NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
-	"time_elapsed" int,
-	"duration" int DEFAULT 0
+  "id" SERIAL PRIMARY KEY,
+  "time_begin" TIMESTAMPTZ NOT NULL,
+  "time_end" TIMESTAMPTZ,
+  "date" DATE NOT NULL DEFAULT CURRENT_DATE,
+  "status" BOOLEAN DEFAULT FALSE,
+  "user_id" INTEGER NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
+	"time_elapsed" INTEGER,
+	"duration" INTEGER DEFAULT 0
 );
 
-CREATE TABLE "machine"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"name" text NOT NULL UNIQUE
+CREATE TABLE "machine" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(100) NOT NULL UNIQUE
 );
 
-CREATE TABLE "article"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"name" text NOT NULL UNIQUE,
-	"initial_quantity" int DEFAULT 0,
-	"objective" int DEFAULT 0 CHECK((objective > initial_quantity) OR (objective = 0))
+CREATE TABLE "article" (
+  "id" SERIAL PRIMARY KEY,
+  "name" VARCHAR(100) NOT NULL UNIQUE,
+  "initial_quantity" INTEGER DEFAULT 0 CHECK (initial_quantity >= 0),
+  "objective" INTEGER DEFAULT 0 CHECK ((objective >= initial_quantity) OR (objective = 0))
 );
 
 CREATE TABLE "production"(
-	"id" int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	"machine_id" int NOT NULL REFERENCES "machine"("id") ON DELETE CASCADE,
-	"article_id" int NOT NULL REFERENCES "article"("id") ON DELETE CASCADE,
-    "quantity_product_aff" int DEFAULT 0,
-    "quantity_reject_aff" int DEFAULT 0,
-	"created_at" TIMESTAMPTZ NOT NULL DEFAULT (NOW()),
+  "id" SERIAL PRIMARY KEY,
+  "machine_id" INTEGER NOT NULL REFERENCES "machine"("id") ON DELETE CASCADE,
+  "article_id" INTEGER NOT NULL REFERENCES "article"("id") ON DELETE CASCADE,
+  "timer_id" INTEGER NOT NULL REFERENCES "timer"("id") ON DELETE CASCADE,
+    "quantity_product_aff" INTEGER DEFAULT 0,
+    "quantity_reject_aff" INTEGER DEFAULT 0,
+	"created_at" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMPTZ,
-	"timer_id" int NOT NULL REFERENCES "timer"("id") ON DELETE CASCADE,
-	"objective_historical" int DEFAULT 0
+	"objective_historical" INTEGER DEFAULT 0
 );
 
 
