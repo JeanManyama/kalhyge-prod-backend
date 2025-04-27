@@ -12,9 +12,9 @@ CREATE TABLE "user" (
   "id" SERIAL PRIMARY KEY,
   "firstname" VARCHAR(100) NOT NULL,
   "email" VARCHAR(180) NOT NULL UNIQUE,
-  "password" TEXT NOT NULL,
+  "password" VARCHAR(255) NOT NULL,
   "role_id" INTEGER NOT NULL REFERENCES "role"("id") ON DELETE CASCADE,
-  "refresh_token" TEXT,
+  "refresh_token" VARCHAR(255),
   "refresh_token_expires_at" TIMESTAMPTZ,
   "created_at" TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
