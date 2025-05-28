@@ -13,6 +13,7 @@ const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
       'http://localhost:3000',
+      'https://localhost:5000',
       'http://localhost:5173',
       process.env.FRONTEND_URL || 'https://o-clock-mimir.github.io/Kalhyge-prod/',
       'https://kalhyge-production.surge.sh', // Surge
