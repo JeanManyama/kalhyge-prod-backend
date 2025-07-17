@@ -13,7 +13,8 @@
     "db:create": "psql -d kalhyge-prod -f data/create_tables.sql",
     "db:seeding": "psql -d kalhyge-prod -f data/seed_tables.sql",
     "db:reset": "npm run db:create && npm run db:seeding",
-    "start": "node app.js"
+    "start": "node app.js",
+    "deploy": "bash ./deploy-back.sh"
   },
   "keywords": [],
   "author": "",
