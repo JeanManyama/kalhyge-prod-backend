@@ -20,7 +20,7 @@ export default {
 	},
 
 	async create(req, res) {
-		console.log("Données reçues au backend :", req.body);
+		console.log("Données reçues au backend, le voici :", req.body);
 	
 		// Vérifiez si req.body.name existe et est non vide
 		if (!req.body.name) {
