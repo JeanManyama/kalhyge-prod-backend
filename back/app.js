@@ -9,24 +9,19 @@ const app = express();
 const server = createServer(app);
 
 // Configration CORS dynamique
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'http://localhost:5173', 
+  'https://kalhyge-production.surge.sh', 
+  'https://deploy-front-vercel-cd.vercel.app'
+];
+
 const corsOptions = {
   origin: (origin, callback) => {
-    const allowedOrigins = [
-      'http://localhost:3000',
-      'https://localhost:5000',
-      'http://localhost:5173',
-      process.env.FRONTEND_URL || 'https://o-clock-mimir.github.io/Kalhyge-prod/',
-      'https://kalhyge-production.surge.sh', // Surge
-      'https://deploy-front-vercel-cd.vercel.app', // Vercel
-      'https://deploy-front-git-main-jean-manyamas-projects.vercel.app',
-      'https://deploy-front-7t7i1xdzt-jean-manyamas-projects.vercel.app',
-      'https://deploy-front-3roq77e6z-jean-manyamas-projects.vercel.app',
-      'https://deploy-front-jean-manyamas-projects.vercel.app'
-    ];
-
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`Origine non autorisée : ${origin}`);
       callback(new Error(`Origine non autorisée : ${origin}`));
     }
   },
