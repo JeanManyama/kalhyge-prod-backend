@@ -12,7 +12,7 @@ const server = createServer(app);
 const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5173', 
-  'https://kalhyge-production.surge.sh', 
+  // 'https://kalhyge-production.surge.sh', 
   'https://deploy-front-vercel-cd.vercel.app'
 ];
 
