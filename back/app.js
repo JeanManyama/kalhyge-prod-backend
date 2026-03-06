@@ -13,7 +13,7 @@ const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5173', 
   // 'https://kalhyge-production.surge.sh', 
-  'https://deploy-front-vercel-cd.vercel.app'
+  'https://deploy-front-vercel-cdvercel.vercel.app'
 ];
 
 const corsOptions = {
