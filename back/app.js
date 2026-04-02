@@ -12,13 +12,12 @@ const server = createServer(app);
 const allowedOrigins = [
   'http://localhost:3000', 
   'http://localhost:5173', 
-  // 'https://kalhyge-production.surge.sh', 
-  'https://deploy-front-vercel-cdvercel.vercel.app'
+  'https://kalhyge-production.surge.sh' 
 ];
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app') ) {
       callback(null, true);
     } else {
       console.warn(`Origine non autorisée : ${origin}`);
