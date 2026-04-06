@@ -40,13 +40,11 @@ export default {
 			.buildSignupBodySchema()
 			.safeParseAsync(req.body);
 		if (error) {
-			return res
-				.status(409)
-				.json({
-					status: 409,
-					message:
-						"Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres et caractères spéciaux si possible",
-				});
+			return res.status(409).json({
+				status: 409,
+				message:
+					"Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres et caractères spéciaux si possible",
+			});
 		}
 
 		const { firstname, email, password } = data;
@@ -172,12 +170,10 @@ export default {
 			const { refreshToken } = req.body;
 
 			if (!refreshToken) {
-				return res
-					.status(400)
-					.json({
-						status: 400,
-						message: "Refresh token requis pour la déconnexion.",
-					});
+				return res.status(400).json({
+					status: 400,
+					message: "Refresh token requis pour la déconnexion.",
+				});
 			}
 
 			// Hacher le refreshToken pour le comparer avec celui stocké
@@ -189,12 +185,10 @@ export default {
 			});
 
 			if (!user) {
-				return res
-					.status(404)
-					.json({
-						status: 404,
-						message: "Utilisateur introuvable ou refresh token invalide.",
-					});
+				return res.status(404).json({
+					status: 404,
+					message: "Utilisateur introuvable ou refresh token invalide.",
+				});
 			}
 
 			// Supprimer le refresh token de l'utilisateur
@@ -217,12 +211,10 @@ export default {
 			res.status(200).json({ status: 200, message: "Déconnexion réussie." });
 		} catch (error) {
 			console.error("Erreur lors de la déconnexion :", error);
-			res
-				.status(500)
-				.json({
-					status: 500,
-					message: "Erreur interne lors de la déconnexion.",
-				});
+			res.status(500).json({
+				status: 500,
+				message: "Erreur interne lors de la déconnexion.",
+			});
 		}
 	},
 
@@ -282,13 +274,11 @@ export default {
 				.buildResetPasswordSchema()
 				.safeParseAsync(req.body);
 			if (error) {
-				return res
-					.status(409)
-					.json({
-						status: 409,
-						message:
-							"Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres et caractères spéciaux si possible",
-					});
+				return res.status(409).json({
+					status: 409,
+					message:
+						"Attention !!! Minimum 12 caractères pour le mot de passe. Ne pas hésiter à mélanger  minuscules, majuscules, chiffres et caractères spéciaux si possible",
+				});
 			}
 			const { email, newPassword } = req.body;
 

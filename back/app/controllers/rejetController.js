@@ -48,11 +48,9 @@ export default {
 			});
 		} catch (error) {
 			console.error("Erreur lors de la récupération des rejets:", error);
-			res
-				.status(500)
-				.json({
-					message: "Erreur serveur lors de la récupération des données",
-				});
+			res.status(500).json({
+				message: "Erreur serveur lors de la récupération des données",
+			});
 		}
 	},
 

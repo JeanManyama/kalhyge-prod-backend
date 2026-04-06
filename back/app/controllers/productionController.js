@@ -688,20 +688,18 @@ export default {
 
 			if (!data.articles || data.articles.length === 0) {
 				console.log("La machine n\'est pas en service");
-				res
-					.status(201)
-					.json({
-						id: machineId,
-						name: machines[0].name,
-						articles: [
-							{
-								id: 0,
-								name: "Pas en service",
-								total_quantity: [0],
-								total_quantity_reject: [0],
-							},
-						],
-					});
+				res.status(201).json({
+					id: machineId,
+					name: machines[0].name,
+					articles: [
+						{
+							id: 0,
+							name: "Pas en service",
+							total_quantity: [0],
+							total_quantity_reject: [0],
+						},
+					],
+				});
 				return;
 			}
 
@@ -899,12 +897,10 @@ export default {
 		// Vérification du format de la date (YYYY-MM-DD)
 		const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 		if (!dateRegex.test(date)) {
-			return res
-				.status(400)
-				.json({
-					status: "error",
-					message: "La date doit être au format YYYY-MM-DD.",
-				});
+			return res.status(400).json({
+				status: "error",
+				message: "La date doit être au format YYYY-MM-DD.",
+			});
 		}
 		// function to format duration in seconds to HH:mm:ss
 		function formatDuration(durationInSeconds) {
