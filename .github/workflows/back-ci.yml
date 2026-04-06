@@ -1,0 +1,53 @@
+name: Backend CI/CD
+
+# Déclenche le workflow à chaque push ou PR sur main
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest
+
+    # Variables d'environnement nécessaires pour les tests
+    env:
+      PG_URL: ${{ secrets.TEST_PG_URL }}
+      MAIL_USER: ${{ secrets.MAIL_USER }}
+      MAIL_PASS: ${{ secrets.MAIL_PASS }}
+
+    steps:
+      # 1️⃣ Récupérer le dépôt
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2️⃣ Installer Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 3️⃣ Installer les dépendances
+      - name: Install dependencies
+        run: npm install
+
+      # 4️⃣ Vérifier le code avec Biome (lint)
+      - name: Lint code
+        run: npx biome check .
+
+      # 5️⃣ Vérification de sécurité
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+      # 6️⃣ Lancer les tests
+      - name: Run tests
+        run: npm test
+
+      # 7️⃣ Déploiement Render (si tout passe)
+      - name: Deploy to Render
+        if: success()
+        run: |
+          echo "✅ Tests et lint OK – Render détectera le push pour déployer"
+          # Si tu veux déclencher Render via push, il n'y a rien à faire :
+          # Render est déjà configuré pour rebuild automatiquement sur push main.

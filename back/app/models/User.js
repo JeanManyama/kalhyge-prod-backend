@@ -25,15 +25,15 @@ User.init(
 			// 	key: "id",
 			// },
 		},
-		refresh_token: { 
-      type: DataTypes.TEXT
-    },
-    refresh_token_expires_at: {
-      type: DataTypes.DATE
-    },
+		refresh_token: {
+			type: DataTypes.TEXT,
+		},
+		refresh_token_expires_at: {
+			type: DataTypes.DATE,
+		},
 	},
 	{
-    sequelize,
+		sequelize,
 		tableName: "user",
 		timestamps: false,
 	},

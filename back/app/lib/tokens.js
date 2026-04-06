@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import config from "../config.js";
 
 // Déstructuration des configurations nécessaires
-const { algorithm, audience, expiresIn, issuer, secret, type } = config.auth.accessToken;
+const { algorithm, audience, expiresIn, issuer, secret, type } =
+	config.auth.accessToken;
 const { expiresIn: refreshTokenExpiresIn } = config.auth.refreshToken;
 const { preventCSRF } = config.auth; // Pour les clients basés sur navigateur
 
@@ -13,28 +14,28 @@ const { preventCSRF } = config.auth; // Pour les clients basés sur navigateur
  * @returns {Object} - Contient les tokens et métadonnées associées
  */
 function generateAuthenticationTokens(user) {
-  const csrfToken = preventCSRF ? generateRandomString() : null;
+	const csrfToken = preventCSRF ? generateRandomString() : null;
 
-  const payload = {
-    id: user.id,
-    firstname: user.firstname,
-    ...(csrfToken && { csrfToken }) // Ajout conditionnel du csrfToken dans le payload
-  };
+	const payload = {
+		id: user.id,
+		firstname: user.firstname,
+		...(csrfToken && { csrfToken }), // Ajout conditionnel du csrfToken dans le payload
+	};
 
-  return {
-    accessToken: {
-      token: generateJwtToken(payload),
-      type,
-      expiresAt: createExpirationDate(expiresIn),
-      expiresInMS: expiresIn
-    },
-    refreshToken: {
-      token: generateRandomString(),
-      expiresAt: createExpirationDate(refreshTokenExpiresIn),
-      expiresInMS: refreshTokenExpiresIn
-    },
-    ...(csrfToken && { csrfToken }) // Ajout conditionnel du csrfToken
-  };
+	return {
+		accessToken: {
+			token: generateJwtToken(payload),
+			type,
+			expiresAt: createExpirationDate(expiresIn),
+			expiresInMS: expiresIn,
+		},
+		refreshToken: {
+			token: generateRandomString(),
+			expiresAt: createExpirationDate(refreshTokenExpiresIn),
+			expiresInMS: refreshTokenExpiresIn,
+		},
+		...(csrfToken && { csrfToken }), // Ajout conditionnel du csrfToken
+	};
 }
 
 /**
@@ -43,7 +44,7 @@ function generateAuthenticationTokens(user) {
  * @returns {string} - Le token JWT signé
  */
 function generateJwtToken(payload) {
-  return jwt.sign(payload, secret, { algorithm, audience, expiresIn, issuer });
+	return jwt.sign(payload, secret, { algorithm, audience, expiresIn, issuer });
 }
 
 /**
@@ -52,12 +53,12 @@ function generateJwtToken(payload) {
  * @returns {Object|null} - Le payload décodé si valide, sinon null
  */
 function verifyJwtToken(token) {
-  try {
-    return jwt.verify(token, secret, { algorithms: [algorithm] });
-  } catch (error) {
-    console.error("JWT verification error:", error);
-    return null;
-  }
+	try {
+		return jwt.verify(token, secret, { algorithms: [algorithm] });
+	} catch (error) {
+		console.error("JWT verification error:", error);
+		return null;
+	}
 }
 
 /**
@@ -65,7 +66,7 @@ function verifyJwtToken(token) {
  * @returns {string} - Une chaîne aléatoire encodée en base64
  */
 function generateRandomString() {
-  return crypto.randomBytes(128).toString("base64");
+	return crypto.randomBytes(128).toString("base64");
 }
 
 /**
@@ -74,14 +75,14 @@ function generateRandomString() {
  * @returns {Date} - La date d'expiration
  */
 function createExpirationDate(expiresInMs) {
-  return new Date(Date.now() + expiresInMs);
+	return new Date(Date.now() + expiresInMs);
 }
 
 // Exportation par défaut
 export default {
-  generateAuthenticationTokens,
-  generateJwtToken,
-  verifyJwtToken,
-  generateRandomString,
-  createExpirationDate
+	generateAuthenticationTokens,
+	generateJwtToken,
+	verifyJwtToken,
+	generateRandomString,
+	createExpirationDate,
 };

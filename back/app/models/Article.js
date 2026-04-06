@@ -3,7 +3,6 @@ import { sequelize } from "../database.js";
 import { Machine } from "./Machine.js"; // Importer le modèle Machine
 import { Production } from "./Production.js"; // Importer le modèle Productionnnn
 
-
 export class Article extends Model {}
 
 Article.init(
@@ -34,7 +33,4 @@ Article.init(
 		tableName: "article",
 		timestamps: false,
 	},
-
 );
-
-
