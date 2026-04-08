@@ -39,7 +39,7 @@ export default {
 	async create(req, res) {
 		console.log("Données reçues au backend :", req.body);
 
-		if (!req.body.name || !req.body.name.trim()) {
+		if (!req.body.name?.trim()) {
 			return res.status(400).json({ error: "Le champ 'name' est requis." });
 		}
 
@@ -81,7 +81,7 @@ export default {
 			return res.status(400).json({ error: "ID de la machine requis." });
 		}
 
-		if (!name || !name.trim()) {
+		if (!name?.trim()) {
 			return res.status(400).json({ error: "Le champ 'name' est requis." });
 		}
 
@@ -94,7 +94,7 @@ export default {
 				},
 			);
 
-			if (!machines || !machines.length) {
+			if (!machines?.length) {
 				return res.status(404).json({ error: "Machine non trouvée." });
 			}
 

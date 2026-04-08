@@ -1,9 +1,9 @@
-import { User, Role } from "../models/index.js";
-import cryptos from "../lib/cryptos.js";
 import config from "../config.js";
+import cryptos from "../lib/cryptos.js";
+import { sendResetCode } from "../lib/mailer.js";
 import schemas from "../lib/schemas.js";
 import tokens from "../lib/tokens.js";
-import { sendResetCode } from "../lib/mailer.js";
+import { Role, User } from "../models/index.js";
 
 const resetCodes = new Map(); // Map: email => { code, newPassword, expires }
 
@@ -227,7 +227,7 @@ export default {
 			}
 
 			const authorizationHeader =
-				req.headers["Authorization"] || req.headers["authorization"];
+				req.headers.Authorization || req.headers.authorization;
 			const accessToken =
 				req.cookies?.accessToken || authorizationHeader?.split("Bearer ")[1];
 			const decodedToken = tokens.verifyJwtToken(accessToken);
@@ -270,7 +270,7 @@ export default {
 	async sendResetCode(req, res) {
 		try {
 			// Validation du corps de la requête
-			const { data, error } = await schemas
+			const { _data, error } = await schemas
 				.buildResetPasswordSchema()
 				.safeParseAsync(req.body);
 			if (error) {

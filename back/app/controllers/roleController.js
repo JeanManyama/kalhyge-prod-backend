@@ -6,7 +6,7 @@ export default {
 		res.json(roles);
 	},
 
-	async getByRole(req, res, next) {
+	async getByRole(req, res, _next) {
 		const { roleId } = req.params;
 		const roles = await Role.findAll({ where: { role_id: roleId } });
 
@@ -40,7 +40,7 @@ export default {
 			returning: true,
 		});
 
-		if (!roles || !roles.length) {
+		if (!roles?.length) {
 			return next();
 		}
 

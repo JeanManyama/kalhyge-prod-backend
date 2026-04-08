@@ -1,5 +1,4 @@
-import { Timer, Article, Production, Machine } from "../models/index.js";
-import { Op } from "sequelize";
+import { Article, Production, Timer } from "../models/index.js";
 
 let timerInterval;
 
@@ -42,7 +41,7 @@ export default {
 			returning: true,
 		});
 
-		if (!timers || !timers.length) {
+		if (timers?.length) {
 			return next();
 		}
 
@@ -131,7 +130,7 @@ export default {
 	},
 
 	// Arrêter un timer actif
-	async updateObjectiveHistoricalAndStop(req, res, next) {
+	async updateObjectiveHistoricalAndStop(req, res, _next) {
 		try {
 			// 1. Récupérer le timer actif
 			const activeTimer = await Timer.findOne({ where: { status: true } });
@@ -300,7 +299,7 @@ export default {
 		}
 	},
 	// Recup de l'Id Timer à partir de la date
-	async getTodayTimer(req, res) {
+	async getTodayTimer(_req, res) {
 		try {
 			// Obtenir la date d'aujourd'hui
 			const today = new Date().toISOString().split("T")[0]; // Formate la date en "YYYY-MM-DD"

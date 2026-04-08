@@ -31,7 +31,7 @@ const config = {
 			scrypt: {
 				saltLength: process.env.SCRYPT_SALT_LENGTH || 16, // 16-bytes salt
 				hashLength: process.env.SCRYPT_HASH_LENGTH || 64, // 64 characters hash
-				cost: process.env.SCRYPT_COST || Math.pow(2, 17), // amount of CPU/memory used
+				cost: process.env.SCRYPT_COST || 2 ** 17, // amount of CPU/memory used
 				blockSize: process.env.SCRYPT_BLOCK_SIZE || 8, // 1024 bytes memory blocks
 				parallelization: process.env.SCRYPT_PARALLELIZATION || 1, // nb of concurrent threads
 				maxmem: process.env.SCRYPT_MAXMEM | 134220800, // maximum memory used by the algorithm. Slightly above 128MB

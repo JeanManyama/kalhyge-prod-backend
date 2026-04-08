@@ -1,7 +1,7 @@
 import "dotenv/config";
-import express from "express";
-import cors from "cors";
 import { createServer } from "node:http";
+import cors from "cors";
+import express from "express";
 import { Server as socketIo } from "socket.io";
 import { router } from "./app/routers/index.js";
 
@@ -41,7 +41,7 @@ const io = new socketIo(server, {
 
 global.io = io;
 
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
 	req.io = io;
 	next();
 });

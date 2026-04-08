@@ -1,10 +1,10 @@
-import { Sequelize, Op } from "sequelize";
-import { Machine, Article, Production, Timer } from "../models/index.js";
+import { Op, Sequelize } from "sequelize";
+import { Article, Machine, Production } from "../models/index.js";
 
 export default {
 	// Récupération de tous les rejets, ainsi que toutes les machines et tous les articles
-	async getAllRejects(req, res, next) {
-		const timerId = Number.parseInt(req.params.timerId);
+	async getAllRejects(req, res, _next) {
+		const timerId = Number.parseInt(req.params.timerId, 10);
 
 		try {
 			// Récupérer tous les rejets avec les relations 'articles', 'machines', et filtrer par timerId
@@ -55,14 +55,14 @@ export default {
 	},
 
 	// Creation d'un rejet
-	async create(req, res, next) {
+	async create(req, res, _next) {
 		const { rejectInputForm } = req.body;
 		// const articleId =Number.parseInt(  req.body.article_id);
 		const articleId = req.body.article_id;
 		// const timerId = Number.parseInt(req.body.timer_id);
 		// const timerId = req.body.timer_id;
 		// const timerId =1;
-		const timerId = Number.parseInt(req.body.timer_id);
+		const timerId = Number.parseInt(req.body.timer_id, 10);
 
 		// const machineId =Number.parseInt(  req.body.machine_id);
 		const machineId = req.body.machine_id;
@@ -83,11 +83,12 @@ export default {
 
 		const lastQuantity = Number.parseInt(
 			lastReject ? lastReject.quantity_reject_aff : 0,
+			10,
 		);
 
 		console.log("la valeur du rejet précédent est : ", lastQuantity);
 
-		if (lastQuantity < Number.parseInt(newQuantity)) {
+		if (lastQuantity < Number.parseInt(newQuantity, 10)) {
 			const rejectInput = {
 				...rejectInputForm, // Les autres champs provenant de articleInput
 				machine_id: machineId, // Ajout de machine_id
@@ -175,11 +176,11 @@ export default {
 
 	// Mise à jour Machine du rejet (timer_id ne pas oublier)
 	async updateMachineReject(req, res, next) {
-		const articleId = Number.parseInt(req.body.article_id);
-		const rejectId = Number.parseInt(req.body.rejectId);
-		const machineId = Number.parseInt(req.body.machineId); // La nouvele machine à associer
-		const newQuantity = Number.parseInt(req.body.quantity_reject_aff);
-		const timerId = Number.parseInt(req.body.timer_id);
+		const articleId = Number.parseInt(req.body.article_id, 10);
+		const rejectId = Number.parseInt(req.body.rejectId, 10);
+		const machineId = Number.parseInt(req.body.machineId, 10); // La nouvele machine à associer
+		const newQuantity = Number.parseInt(req.body.quantity_reject_aff, 10);
+		const timerId = Number.parseInt(req.body.timer_id, 10);
 		// TIMER A DYNAISER
 		// const timerId =1
 
@@ -216,7 +217,7 @@ export default {
 					const initialDate = new Date(`${currentRecordTab[0].created_at}`);
 
 					// Soustraire 1 minute (60 000 millisecondes) à cette date
-					const newDate = new Date(initialDate.getTime() - 60 * 1000);
+					const _newDate = new Date(initialDate.getTime() - 60 * 1000);
 
 					const [, articles] = await Production.update(
 						{
@@ -230,7 +231,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -254,7 +255,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -288,16 +289,16 @@ export default {
 
 				// Je verfiel si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result1 = "";
-				let quantity_reject_aff_Last = 0;
+				let _quantity_reject_aff_Last = 0;
 				let dateLast = "";
-				let idProdLast = 0;
+				let _idProdLast = 0;
 				// console.log("lobjet1 est ---------------------", result1Obj?result1Obj:0);
 				if (result1Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { created_at, quantity_reject_aff } = result1Obj;
 					result1 = created_at;
-					quantity_reject_aff_Last = quantity_reject_aff;
-					idProdLast = result1Obj.id;
+					_quantity_reject_aff_Last = quantity_reject_aff;
+					_idProdLast = result1Obj.id;
 					// console.log("la date destructurée est Obj1 ---------------------", result1)
 					dateLast = result1.toLocaleString("fr-FR", {
 						timeZone: "Europe/Paris",
@@ -326,17 +327,17 @@ export default {
 
 				// Je verfiel si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result2 = "";
-				let quantity_reject_aff_Next = 0;
+				let _quantity_reject_aff_Next = 0;
 				let dateNext = "";
-				let idProdNextd = 0;
+				let _idProdNextd = 0;
 
 				// console.log("lobjet2 est ---------------------", result2Obj?result2Obj:0);
 
 				if (result2Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { id, quantity_reject_aff, created_at } = result2Obj;
-					idProdNextd = id;
-					quantity_reject_aff_Next = quantity_reject_aff;
+					_idProdNextd = id;
+					_quantity_reject_aff_Next = quantity_reject_aff;
 					result2 = created_at;
 
 					dateNext = result2.toLocaleString("fr-FR", {
@@ -373,7 +374,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -401,7 +402,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -422,7 +423,7 @@ export default {
 							returning: true,
 						},
 					);
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -445,11 +446,11 @@ export default {
 	// Mise à jour Article du rejet (timer_id ne pas oublier)
 	async updateArticleReject(req, res, next) {
 		// console.log("Nous rentrer dans updateArticleReject------------------------")
-		const articleId = Number.parseInt(req.body.articleId); // Le nouvel article à associer
-		const rejectId = Number.parseInt(req.body.rejectId);
-		const machineId = Number.parseInt(req.body.machine_id);
-		const newQuantity = Number.parseInt(req.body.quantity_reject_aff);
-		const timerId = Number.parseInt(req.body.timer_id);
+		const articleId = Number.parseInt(req.body.articleId, 10); // Le nouvel article à associer
+		const rejectId = Number.parseInt(req.body.rejectId, 10);
+		const machineId = Number.parseInt(req.body.machine_id, 10);
+		const newQuantity = Number.parseInt(req.body.quantity_reject_aff, 10);
+		const timerId = Number.parseInt(req.body.timer_id, 10);
 		// TIMER A DYNAISER
 		// const timerId =1
 		// console.log("Id machine associer est ---------------------", machineId);
@@ -490,7 +491,7 @@ export default {
 					const initialDate = new Date(`${currentRecordTab[0].created_at}`);
 
 					// Soustraire 1 minute (60 000 millisecondes) à cette date
-					const newDate = new Date(initialDate.getTime() - 60 * 1000);
+					const _newDate = new Date(initialDate.getTime() - 60 * 1000);
 
 					const [, articles] = await Production.update(
 						{
@@ -504,7 +505,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -528,7 +529,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -562,16 +563,16 @@ export default {
 
 				// Je verfiel si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result1 = "";
-				let quantity_reject_aff_Last = 0;
+				let _quantity_reject_aff_Last = 0;
 				let dateLast = "";
-				let idProdLast = 0;
+				let _idProdLast = 0;
 				// console.log("lobjet1 est ---------------------", result1Obj?result1Obj:0);
 				if (result1Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { created_at, quantity_reject_aff } = result1Obj;
 					result1 = created_at;
-					quantity_reject_aff_Last = quantity_reject_aff;
-					idProdLast = result1Obj.id;
+					_quantity_reject_aff_Last = quantity_reject_aff;
+					_idProdLast = result1Obj.id;
 					// console.log("la date destructurée est Obj1 ---------------------", result1)
 					dateLast = result1.toLocaleString("fr-FR", {
 						timeZone: "Europe/Paris",
@@ -600,17 +601,17 @@ export default {
 
 				// Je verfiel si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result2 = "";
-				let quantity_reject_aff_Next = 0;
+				let _quantity_reject_aff_Next = 0;
 				let dateNext = "";
-				let idProdNextd = 0;
+				let _idProdNextd = 0;
 
 				// console.log("lobjet2 est ---------------------", result2Obj?result2Obj:0);
 
 				if (result2Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { id, quantity_reject_aff, created_at } = result2Obj;
-					idProdNextd = id;
-					quantity_reject_aff_Next = quantity_reject_aff;
+					_idProdNextd = id;
+					_quantity_reject_aff_Next = quantity_reject_aff;
 					result2 = created_at;
 
 					dateNext = result2.toLocaleString("fr-FR", {
@@ -647,7 +648,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -675,7 +676,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -696,7 +697,7 @@ export default {
 							returning: true,
 						},
 					);
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -721,8 +722,8 @@ export default {
 	// Mise à jour Quantité du rejet pas besoin du timer_id
 	async updateQuantityReject(req, res, next) {
 		// const {  articleId} = req.params;
-		const rejectId = Number.parseInt(req.body.rejectId);
-		const newQuantity = Number.parseInt(req.body.newQuantity);
+		const rejectId = Number.parseInt(req.body.rejectId, 10);
+		const newQuantity = Number.parseInt(req.body.newQuantity, 10);
 		// const timerId = Number.parseInt(req.body.timer_id);
 		// TIMER A DYNAISER
 		// const timerId =1
@@ -742,6 +743,7 @@ export default {
 
 		const currentQuantity = Number.parseInt(
 			currentReject ? currentReject.quantity_reject_aff : 0,
+			10,
 		);
 
 		// Recuperation de l'enregistrement -1 du reject
@@ -776,8 +778,8 @@ export default {
 		// console.log("la nouvelle quantité venue du formulaire est  : " , newQuantity);
 
 		if (
-			Number.parseInt(newQuantity) === 0 ||
-			currentQuantity === Number.parseInt(newQuantity) ||
+			Number.parseInt(newQuantity, 10) === 0 ||
+			currentQuantity === Number.parseInt(newQuantity, 10) ||
 			(nextR !== 0 && newQuantity >= nextR) ||
 			newQuantity <= previous
 		) {
@@ -790,7 +792,7 @@ export default {
 					returning: true,
 				},
 			);
-			if (!articles || !articles.length) {
+			if (!articles?.length) {
 				return next();
 			}
 			const [article] = articles;

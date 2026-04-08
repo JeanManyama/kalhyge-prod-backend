@@ -1,18 +1,17 @@
-import tokens from "../lib/tokens.js";
 import config from "../config.js";
+import tokens from "../lib/tokens.js";
 
 // Authentication middleware
 export function isAuthenticated(req, res, next) {
 	const authorizationHeader =
-		req.headers["Authorization"] || req.headers["authorization"];
+		req.headers.Authorization || req.headers.authorization;
 	console.log(
 		"Le headers ma en envoyé ca----------------------------",
 		authorizationHeader,
 	);
 	// Récupérer le token d'accès depuis l'en-tête Authorization
 	const accessToken =
-		req.cookies?.accessToken ||
-		req.headers?.["authorization"]?.split("Bearer ")[1];
+		req.cookies?.accessToken || req.headers?.authorization?.split("Bearer ")[1];
 
 	if (!accessToken) {
 		return res.status(404).json("Accès non autorisé");
@@ -43,19 +42,19 @@ export function isAuthenticated(req, res, next) {
 
 // =========== Admin ============
 
-import { User } from "../models/User.js"; // Assurez-vous que le modèle User est correctement importé
 import { Role } from "../models/Role.js"; // Assurez-vous que le modèle Role est correctement importé
+import { User } from "../models/User.js"; // Assurez-vous que le modèle User est correctement importé
 
 export async function isAdmin(req, res, next) {
 	try {
 		// Récupérer l'ID de l'utilisateur à partir du token décodé
 		const authorizationHeader =
-			req.headers["Authorization"] || req.headers["authorization"];
+			req.headers.Authorization || req.headers.authorization;
 		const accessToken =
 			req.cookies?.accessToken || authorizationHeader?.split("Bearer ")[1];
 		const decodedToken = tokens.verifyJwtToken(accessToken);
 
-		if (!decodedToken || !decodedToken.id) {
+		if (!decodedToken?.id) {
 			return res.status(404).json("Accès non autorisé");
 		}
 

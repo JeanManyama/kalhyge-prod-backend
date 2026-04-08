@@ -1,5 +1,5 @@
-import { Sequelize, Op } from "sequelize";
-import { Machine, Article, Production, Timer } from "../models/index.js";
+import { Op, Sequelize } from "sequelize";
+import { Article, Machine, Production, Timer } from "../models/index.js";
 
 export default {
 	// fetch pour essaie
@@ -8,8 +8,8 @@ export default {
 	},
 
 	//----------------------- Recuperation de la production par article(La partie centre)----------------------------//
-	async getByProductionArticle(req, res, next) {
-		const timerId = Number.parseInt(req.params.timerId);
+	async getByProductionArticle(req, res, _next) {
+		const timerId = Number.parseInt(req.params.timerId, 10);
 
 		// console.log("LE TIMER ID EST -------------- : ", timerId);
 
@@ -160,13 +160,13 @@ export default {
 	},
 
 	// Creation d'une production
-	async create(req, res, next) {
+	async create(req, res, _next) {
 		const { articleInput } = req.body;
 
-		const machineId = Number.parseInt(req.body.machine_id);
-		const timerId = Number.parseInt(req.body.timer_id);
-		const newQuantity = Number.parseInt(req.body.quantity_product_aff);
-		const articleId = Number.parseInt(req.params.articleId);
+		const machineId = Number.parseInt(req.body.machine_id, 10);
+		const timerId = Number.parseInt(req.body.timer_id, 10);
+		const newQuantity = Number.parseInt(req.body.quantity_product_aff, 10);
+		const articleId = Number.parseInt(req.params.articleId, 10);
 
 		// console.log("la machine id est : ", machineId);
 		// console.log("la timer id est : ", timerId);
@@ -187,9 +187,10 @@ export default {
 
 		const lastQuantity = Number.parseInt(
 			lastProduction ? lastProduction.quantity_product_aff : 0,
+			10,
 		);
 
-		if (lastQuantity < Number.parseInt(newQuantity)) {
+		if (lastQuantity < Number.parseInt(newQuantity, 10)) {
 			const productionInput = {
 				...articleInput, // Les autres champs provenant de articleInput
 				machine_id: machineId, // Ajout de machine_id
@@ -221,7 +222,7 @@ export default {
 	async updateQuantity(req, res, next) {
 		// const {  articleId} = req.params;
 		const productionId = req.body.prodId;
-		const newQuantity = Number.parseInt(req.body.quantity_product_aff);
+		const newQuantity = Number.parseInt(req.body.quantity_product_aff, 10);
 
 		// recuprer la production courante à changer
 		const currentProduction = await Production.findOne({
@@ -240,6 +241,7 @@ export default {
 
 		const currentQuantity = Number.parseInt(
 			currentProduction ? currentProduction.quantity_product_aff : 0,
+			10,
 		);
 
 		// Recuperation de la valeur -1 de la production
@@ -274,8 +276,8 @@ export default {
 		// console.log("la valeur de la production à modifier est : " , newQuantity);
 
 		if (
-			Number.parseInt(newQuantity) === 0 ||
-			currentQuantity === Number.parseInt(newQuantity) ||
+			Number.parseInt(newQuantity, 10) === 0 ||
+			currentQuantity === Number.parseInt(newQuantity, 10) ||
 			(nextR !== 0 && newQuantity >= nextR) ||
 			newQuantity <= previous
 		) {
@@ -288,7 +290,7 @@ export default {
 					returning: true,
 				},
 			);
-			if (!articles || !articles.length) {
+			if (!articles?.length) {
 				return next();
 			}
 			const [article] = articles;
@@ -357,7 +359,7 @@ export default {
 					const initialDate = new Date(`${currentRecordTab[0].created_at}`);
 
 					// Soustraire 1 minute (60 000 millisecondes) à cette date
-					const newDate = new Date(initialDate.getTime() - 60 * 1000);
+					const _newDate = new Date(initialDate.getTime() - 60 * 1000);
 
 					const [, articles] = await Production.update(
 						{
@@ -371,7 +373,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -395,7 +397,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -427,17 +429,17 @@ export default {
 
 				// Je verfie si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result1 = "";
-				let quantity_product_aff_Last = 0;
+				let _quantity_product_aff_Last = 0;
 				let dateLast = "";
-				let idProdLast = 0;
+				let _idProdLast = 0;
 				// console.log("lobjet1 : La plus proche inferieur est : ---------------------", result1Obj?result1Obj:0);
 
 				if (result1Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { created_at, quantity_product_aff } = result1Obj;
 					result1 = created_at;
-					quantity_product_aff_Last = quantity_product_aff;
-					idProdLast = result1Obj.id;
+					_quantity_product_aff_Last = quantity_product_aff;
+					_idProdLast = result1Obj.id;
 					console.log(
 						"la date destructurée est Obj1 ---------------------",
 						result1,
@@ -472,17 +474,17 @@ export default {
 
 				// Je verfiel si j'ai bien un objet qui n'est pas null avant de le destructurer
 				let result2 = "";
-				let quantity_product_aff_Next = 0;
+				let _quantity_product_aff_Next = 0;
 				let dateNext = "";
-				let idProdNextd = 0;
+				let _idProdNextd = 0;
 
 				// console.log("lobjet2 est ----------------------------------------------------", result2Obj?result2Obj:0);
 
 				if (result2Obj) {
 					// Je destructure l'objet pour recuperer la date et la quantité
 					const { id, quantity_product_aff, created_at } = result2Obj;
-					idProdNextd = id;
-					quantity_product_aff_Next = quantity_product_aff;
+					_idProdNextd = id;
+					_quantity_product_aff_Next = quantity_product_aff;
 					result2 = created_at;
 
 					dateNext = result2.toLocaleString("fr-FR", {
@@ -519,7 +521,7 @@ export default {
 						},
 					);
 
-					if (!machines || !machines.length) {
+					if (!machines?.length) {
 						return next();
 					}
 					const [article] = machines;
@@ -542,7 +544,7 @@ export default {
 						},
 					);
 
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -558,7 +560,7 @@ export default {
 							returning: true,
 						},
 					);
-					if (!articles || !articles.length) {
+					if (!articles?.length) {
 						return next();
 					}
 					const [article] = articles;
@@ -573,7 +575,7 @@ export default {
 						returning: true,
 					},
 				);
-				if (!machines || !machines.length) {
+				if (!machines?.length) {
 					return next();
 				}
 				const [machine] = machines;
@@ -619,9 +621,9 @@ export default {
 
 	// -----------------------------------La partie d'en haut de la production------------//
 	// Recuperation de la production par machine
-	async getByProductionMachine(req, res, next) {
+	async getByProductionMachine(req, res, _next) {
 		const machineId = req.params.machineId;
-		const timerId = Number.parseInt(req.body.timer_id);
+		const timerId = Number.parseInt(req.body.timer_id, 10);
 		// console.log("la machine id est : ", machineId);
 		console.log("le timer AU BACK EST---------- : ", timerId);
 		// Fonction pour calculer la somme des écarts
@@ -687,7 +689,7 @@ export default {
 			}
 
 			if (!data.articles || data.articles.length === 0) {
-				console.log("La machine n\'est pas en service");
+				console.log("La machine n'est pas en service");
 				res.status(201).json({
 					id: machineId,
 					name: machines[0].name,
@@ -775,7 +777,7 @@ export default {
 	//----------------------La partie gauche de la production ----------------------//
 
 	// Recuperation de la production pour affichage avec des heures des entrées
-	async getByProductionArticleWithTime(req, res, next) {
+	async getByProductionArticleWithTime(req, res, _next) {
 		const { articleId } = req.params;
 		const { timer_id } = req.body;
 		console.log("ID TIMER RECU AU BAC EST : ", timer_id);
@@ -850,12 +852,12 @@ export default {
 	},
 
 	// Au cas où, toute la table production
-	async getAllProduction(req, res, next) {
+	async getAllProduction(_req, res, _next) {
 		const productions = await Production.findAll();
 		res.json(productions);
 	},
 	// Recuperation de toutes les machines qui ont fait au moins une production
-	async getAllMachineWithProduct(req, res, next) {
+	async getAllMachineWithProduct(_req, res, _next) {
 		const machines = await Machine.findAll({
 			include: [
 				{
@@ -872,7 +874,7 @@ export default {
 	},
 
 	//---------------: HISTORIQUE : Article et Machines(Une date à recevoir du req.body au format "date" :  "2024-11-24") ----------------------------//
-	async getByProductionHistorique(req, res, next) {
+	async getByProductionHistorique(req, res, _next) {
 		// Fonction pour calculer la somme des écarts
 		function calculateSumOfDifferences(arr) {
 			if (arr.length === 0) return 0;
@@ -929,7 +931,7 @@ export default {
 			if (timers.length === 2) {
 				const [timer1, timer2] = timers;
 				const timeBegin1 = new Date(timer1.time_begin);
-				const timeBegin2 = new Date(timer2.time_begin);
+				const _timeBegin2 = new Date(timer2.time_begin);
 				const noon = new Date(`${date}T13:00:00`);
 				// Classer les timers en matin et après-midi
 				morningTimer = timeBegin1 < noon ? timer1 : timer2;
@@ -2108,7 +2110,7 @@ export default {
 				const [timer1, timer2] = timers;
 
 				const timeBegin1 = new Date(timer1.time_begin);
-				const timeBegin2 = new Date(timer2.time_begin);
+				const _timeBegin2 = new Date(timer2.time_begin);
 				const noon = new Date(`${date}T13:00:00`);
 
 				// Classer les timers en matin et après-midi

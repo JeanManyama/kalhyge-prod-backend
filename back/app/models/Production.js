@@ -1,7 +1,7 @@
-import { Model, DataTypes } from "sequelize";
+import { DataTypes, Model } from "sequelize";
 import { sequelize } from "../database.js";
-import { Article } from "./Article.js"; // Importer le modèle Article
-import { Machine } from "./Machine.js"; // Importer le modèle Machine
+// import { Article } from "./Article.js"; // Importer le modèle Article
+// import { Machine } from "./Machine.js"; // Importer le modèle Machine
 
 export class Production extends Model {}
 

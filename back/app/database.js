@@ -12,8 +12,10 @@ import { Sequelize } from "sequelize";
 // Priorise DATABASE_URL pour Render, PG_URL pour local
 const databaseUrl = process.env.DATABASE_URL || process.env.PG_URL;
 
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-console.log("PG_URL:", process.env.PG_URL);
+if (process.env.NODE_ENV !== "test") {
+	console.log("DATABASE_URL:", process.env.DATABASE_URL);
+	console.log("PG_URL:", process.env.PG_URL);
+}
 
 if (!databaseUrl) {
 	throw new Error(

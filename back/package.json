@@ -14,6 +14,7 @@
 		"db:seeding": "psql -d kalhyge-prod -f data/seed_tables.sql",
 		"db:reset": "npm run db:create && npm run db:seeding",
 		"lint": "biome check .",
+		"lint:fix": "biome check . --write",
 		"format": "biome format . --write",
 		"start": "node app.js",
 		"deploy": "bash ./deploy-back.sh"

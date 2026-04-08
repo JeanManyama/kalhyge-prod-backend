@@ -1,5 +1,4 @@
-import { Sequelize } from "sequelize";
-import { Article, Machine, Production } from "../models/index.js";
+import { Article } from "../models/index.js";
 
 export default {
 	async getAll(_, res) {
@@ -20,7 +19,9 @@ export default {
 	},
 
 	async create(req, res) {
-		console.log("Données reçues au backend, le voici :", req.body);
+		if (process.env.NODE_ENV !== "test") {
+			console.log("Données reçues au backend, le voici :", req.body);
+		}
 
 		// Vérifiez si req.body.name existe et est non vide
 		if (!req.body.name) {
@@ -73,7 +74,7 @@ export default {
 				},
 			);
 
-			if (!articles || !articles.length) {
+			if (!articles?.length) {
 				res.status(404).json({ error: "Article non trouvé." });
 				return;
 			}
@@ -103,7 +104,7 @@ export default {
 				},
 			);
 
-			if (!articles || !articles.length) {
+			if (!articles?.length) {
 				res.status(404).json({ error: "Article non trouvé." });
 				return;
 			}

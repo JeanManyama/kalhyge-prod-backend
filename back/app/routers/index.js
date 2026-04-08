@@ -1,18 +1,18 @@
 import { Router } from "express";
 import articleController from "../controllers/articleController.js";
 import machineController from "../controllers/machineController.js";
+import productionController from "../controllers/productionController.js";
+import rejetController from "../controllers/rejetController.js";
 import timerController from "../controllers/timerController.js";
 import userController from "../controllers/userController.js";
-import productionController from "../controllers/productionController.js";
+import { isAdmin, isAuthenticated } from "../middlewares/authentication.js";
 import controllerWrapper from "../middlewares/controller.wrapper.js";
 import error404 from "../middlewares/error404.js";
-import rejetController from "../controllers/rejetController.js";
-import { isAuthenticated, isAdmin } from "../middlewares/authentication.js";
 
 const router = Router();
 
 //AUTHENTIFICATION---------------------------------------------
-router.get("/checkRole", isAuthenticated, isAdmin, (req, res) => {
+router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
 	res.status(200).json({ message: "admin" });
 });
 router.get("/users", isAuthenticated, userController.getAllUsers);
