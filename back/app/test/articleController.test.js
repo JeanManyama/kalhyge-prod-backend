@@ -43,24 +43,24 @@ describe("Test de la fonction create", () => {
 	it("devrait renvoyer une erreur si l'article existe déjà", async () => {
 		// Simule une requête avec un nom déjà existant
 		const req = { body: { name: "Article Test" } };
-	
+
 		const res = {
 			status: jest.fn().mockReturnThis(),
 			json: jest.fn(),
 		};
-	
+
 		// 👉 On simule que l'article EXISTE déjà en base
 		Article.findOne.mockResolvedValue({
 			id: 1,
 			name: "Article Test",
 		});
-	
+
 		// Appel du controller
 		await articleController.create(req, res);
-	
+
 		// Vérifications
 		expect(Article.findOne).toHaveBeenCalled();
-	
+
 		expect(res.status).toHaveBeenCalledWith(409);
 		expect(res.json).toHaveBeenCalledWith({
 			error: "Un article avec ce nom existe déjà.",
