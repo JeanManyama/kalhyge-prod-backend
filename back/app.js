@@ -12,7 +12,7 @@ const server = createServer(app);
 // Limitation des requettes.....
 const limiter = rateLimit({
 	windowMs: 60 * 1000,
-	max: 3,
+	max: 2,
 	message: "Trop de requêtes, réessaie plus tard.",
 });
 
