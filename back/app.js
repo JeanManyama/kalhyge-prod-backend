@@ -2,11 +2,19 @@ import "dotenv/config";
 import { createServer } from "node:http";
 import cors from "cors";
 import express from "express";
+import rateLimit from "express-rate-limit";
 import { Server as socketIo } from "socket.io";
 import { router } from "./app/routers/index.js";
 
 const app = express();
 const server = createServer(app);
+
+// Limitation des requettes.....
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000,
+	max: 100,
+	message: "Trop de requêtes, réessaie plus tard.",
+});
 
 // Configration CORS dynamique.....
 const allowedOrigins = [
@@ -49,6 +57,12 @@ app.use((req, _res, next) => {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// protection des routes sensibles contre les abus
+app.use("/signup", limiter);
+app.use("/signin", limiter);
+app.use("/send-reset-code", limiter);
+app.use("/validate-reset-code", limiter);
 
 // Mise en place du router
 app.use(router);
