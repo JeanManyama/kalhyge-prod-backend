@@ -9,32 +9,6 @@ import { router } from "./app/routers/index.js";
 const app = express();
 const server = createServer(app);
 
-// Limitation des requettes.....
-// const limiter = rateLimit({
-// 	windowMs: 60 * 1000,
-// 	max: 2,
-// 	keyGenerator: (req) => req.ip,
-// 	message: "Trop de requêtes, réessaie plus tard.",
-// });
-
-// app.use((req, _res, next) => {
-//   console.log("REQ:", req.method, req.originalUrl);
-//   next();
-// });
-// app.use((req, _res, next) => {
-// 	console.log("IP vue:", req.ip);
-// 	next();
-// });
-
-// router.get("/test-limit", limiter, (_req, res) => {
-// 	res.json({ ok: true });
-// });
-
-// app.use((req, _res, next) => {
-// 	console.log("ROUTE HIT:", req.originalUrl);
-// 	next();
-// });
-
 // Configration CORS dynamique.....
 const allowedOrigins = [
 	"http://localhost:3000",
