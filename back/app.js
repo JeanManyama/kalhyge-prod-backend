@@ -67,6 +67,7 @@ app.use("/send-reset-code", limiter);
 app.use("/validate-reset-code", limiter);
 
 // Mise en place du router
+app.use(limiter);
 app.use(router);
 
 io.on("connection", (socket) => {
