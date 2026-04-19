@@ -1,18 +1,28 @@
 import rateLimit from "express-rate-limit";
 
+// ------------------ SIGNUP LIMITER ------------------
 export const signupLimiter = rateLimit({
-	windowMs: 60 * 1000, // 1 min
-	max: 5, // 5 inscriptions / min
+	windowMs: 60 * 1000,
+	max: 5,
 	message: "Trop d'inscriptions, réessaie plus tard.",
 	standardHeaders: true,
 	legacyHeaders: false,
 });
 
+// ------------------ GET REAL IP ------------------
+export const getClientIp = (req) => {
+	return (
+		req.headers["x-forwarded-for"]?.split(",")[0] ||
+		req.connection?.remoteAddress ||
+		req.ip
+	);
+};
+
+// ------------------ BRUTE FORCE ------------------
 const loginAttempts = new Map();
 
-// brute force middleware
 export const bruteForceProtection = (req, res, next) => {
-	const ip = req.ip;
+	const ip = getClientIp(req);
 	const now = Date.now();
 
 	const data = loginAttempts.get(ip);
@@ -30,7 +40,6 @@ export const bruteForceProtection = (req, res, next) => {
 	next();
 };
 
-// fonction à appeler dans controller
 export const registerFailedAttempt = (ip) => {
 	const now = Date.now();
 	const data = loginAttempts.get(ip) || { count: 0 };
@@ -38,7 +47,7 @@ export const registerFailedAttempt = (ip) => {
 	data.count += 1;
 
 	if (data.count >= 5) {
-		data.blockedUntil = now + 15 * 60 * 1000;
+		data.blockedUntil = now + 15 * 60 * 1000; // 15 min
 	}
 
 	loginAttempts.set(ip, data);

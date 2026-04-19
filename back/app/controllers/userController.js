@@ -4,6 +4,7 @@ import { sendResetCode } from "../lib/mailer.js";
 import schemas from "../lib/schemas.js";
 import tokens from "../lib/tokens.js";
 import {
+	getClientIp,
 	registerFailedAttempt,
 	resetAttempts,
 } from "../middlewares/rateLimit.js";
@@ -89,8 +90,8 @@ export default {
 		// Validate user exists and provided password matches
 		const user = await User.findOne({ where: { email } });
 		if (!user) {
-			console.log("FAIL LOGIN:", req.ip);
-			registerFailedAttempt(req.ip);
+			console.log("FAIL LOGIN:", ip);
+			registerFailedAttempt(ip);
 			return res
 				.status(401)
 				.json({ status: 401, message: "Erreur d'authtification" });
@@ -98,16 +99,17 @@ export default {
 
 		const isMatching = await cryptos.compare(password, user.password);
 		if (!isMatching) {
-			console.log("FAIL LOGIN:", req.ip);
-			registerFailedAttempt(req.ip);
+			console.log("FAIL LOGIN:", ip);
+			registerFailedAttempt(ip);
 			return res
 				.status(401)
 				.json({ status: 401, message: "Erreur d'authtification" });
 		}
+		//Login ok
+		resetAttempts(ip);
 		user.created_at = new Date(); // Utilisation de la date actuelle
 		await user.save();
-		//Login ok
-		resetAttempts(req.ip);
+
 		// Générer les nouveaux tokens
 		const { accessToken, refreshToken, csrfToken } =
 			tokens.generateAuthenticationTokens(user);
