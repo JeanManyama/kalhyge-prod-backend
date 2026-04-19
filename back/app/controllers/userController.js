@@ -75,6 +75,7 @@ export default {
 	},
 	// SIGNIN----------------------------------------------
 	async loginUser(req, res) {
+		console.log("----------------------------------------------IP:", req.ip);
 		// Body validation
 		const { data, error } = await schemas
 			.buildLoginBodySchema()
@@ -88,6 +89,7 @@ export default {
 		// Validate user exists and provided password matches
 		const user = await User.findOne({ where: { email } });
 		if (!user) {
+			console.log("FAIL LOGIN:", req.ip);
 			registerFailedAttempt(req.ip);
 			return res
 				.status(401)
@@ -96,6 +98,7 @@ export default {
 
 		const isMatching = await cryptos.compare(password, user.password);
 		if (!isMatching) {
+			console.log("FAIL LOGIN:", req.ip);
 			registerFailedAttempt(req.ip);
 			return res
 				.status(401)
