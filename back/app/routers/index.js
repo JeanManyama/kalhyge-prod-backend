@@ -16,7 +16,7 @@ const router = Router();
 app.set("trust proxy", true);
 const authLimiter = rateLimit({
 	windowMs: 60 * 1000,
-	max: 5,
+	max: 2,
 	message: "Trop de requêtes, réessaie plus tard.",
 });
 
