@@ -76,7 +76,8 @@ export default {
 	},
 	// SIGNIN----------------------------------------------
 	async loginUser(req, res) {
-		console.log("----------------------------------------------IP:", req.ip);
+		const ip = getClientIp(req);
+		console.log("----------------------------------------------IP:", ip);
 		// Body validation
 		const { data, error } = await schemas
 			.buildLoginBodySchema()
