@@ -40,10 +40,6 @@ jobs:
         run: npm test
         working-directory: back
 
-      - name: Build project (optional)
-        run: npm run build || echo "No build script"
-        working-directory: back
-
       - name: Deploy to Render
         if: success()
         run: echo "✅ Tests et lint OK – Render détectera le push"
