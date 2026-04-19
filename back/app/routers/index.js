@@ -8,9 +8,17 @@ import userController from "../controllers/userController.js";
 import { isAdmin, isAuthenticated } from "../middlewares/authentication.js";
 import controllerWrapper from "../middlewares/controller.wrapper.js";
 import error404 from "../middlewares/error404.js";
-import { signinLimiter, signupLimiter } from "../middlewares/rateLimit.js";
+import {
+	bruteForceProtection,
+	registerFailedAttempt,
+	resetAttempts,
+	signupLimiter,
+} from "../middlewares/rateLimit.js";
 
 const router = Router();
+
+registerFailedAttempt(req.ip);
+resetAttempts(req.ip);
 
 //AUTHENTIFICATION---------------------------------------------
 router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
@@ -18,7 +26,7 @@ router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
 });
 router.get("/users", isAuthenticated, userController.getAllUsers);
 router.post("/signup", signupLimiter, userController.signupUser);
-router.post("/signin", signinLimiter, userController.loginUser);
+router.post("/signin", bruteForceProtection, userController.loginUser);
 router.get("/me", userController.getUserInfo);
 router.post("/logOut", userController.logout);
 router.patch(
