@@ -10,15 +10,10 @@ import controllerWrapper from "../middlewares/controller.wrapper.js";
 import error404 from "../middlewares/error404.js";
 import {
 	bruteForceProtection,
-	registerFailedAttempt,
-	resetAttempts,
 	signupLimiter,
 } from "../middlewares/rateLimit.js";
 
 const router = Router();
-
-registerFailedAttempt(req.ip);
-resetAttempts(req.ip);
 
 //AUTHENTIFICATION---------------------------------------------
 router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {

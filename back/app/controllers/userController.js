@@ -3,6 +3,10 @@ import cryptos from "../lib/cryptos.js";
 import { sendResetCode } from "../lib/mailer.js";
 import schemas from "../lib/schemas.js";
 import tokens from "../lib/tokens.js";
+import {
+	registerFailedAttempt,
+	resetAttempts,
+} from "../middlewares/rateLimit.js";
 import { Role, User } from "../models/index.js";
 
 const resetCodes = new Map(); // Map: email => { code, newPassword, expires }
@@ -84,6 +88,7 @@ export default {
 		// Validate user exists and provided password matches
 		const user = await User.findOne({ where: { email } });
 		if (!user) {
+			registerFailedAttempt(req.ip);
 			return res
 				.status(401)
 				.json({ status: 401, message: "Erreur d'authtification" });
@@ -91,12 +96,15 @@ export default {
 
 		const isMatching = await cryptos.compare(password, user.password);
 		if (!isMatching) {
+			registerFailedAttempt(req.ip);
 			return res
 				.status(401)
 				.json({ status: 401, message: "Erreur d'authtification" });
 		}
 		user.created_at = new Date(); // Utilisation de la date actuelle
 		await user.save();
+		//Login ok
+		resetAttempts(req.ip);
 		// Générer les nouveaux tokens
 		const { accessToken, refreshToken, csrfToken } =
 			tokens.generateAuthenticationTokens(user);
