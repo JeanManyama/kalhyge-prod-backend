@@ -11,7 +11,6 @@ import error404 from "../middlewares/error404.js";
 import {
 	bruteForceProtection,
 	signupLimiter,
-	signupProtection,
 } from "../middlewares/rateLimit.js";
 
 const router = Router();
@@ -21,12 +20,7 @@ router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
 	res.status(200).json({ message: "admin" });
 });
 router.get("/users", isAuthenticated, userController.getAllUsers);
-router.post(
-	"/signup",
-	signupLimiter,
-	signupProtection,
-	userController.signupUser,
-);
+router.post("/signup", signupLimiter, userController.signupUser);
 router.post("/signin", bruteForceProtection, userController.loginUser);
 router.get("/me", userController.getUserInfo);
 router.post("/logOut", userController.logout);
