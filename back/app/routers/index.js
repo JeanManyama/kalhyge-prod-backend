@@ -31,7 +31,11 @@ router.patch(
 );
 
 // Mot de passe oublier
-router.post("/send-reset-code", userController.sendResetCode);
+router.post(
+	"/send-reset-code",
+	resetCodeRateLimit,
+	userController.sendResetCode,
+);
 router.post("/validate-reset-code", userController.validateResetCode);
 
 // Route pour les machines
