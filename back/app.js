@@ -12,7 +12,7 @@ const server = createServer(app);
 // Limitation des requettes.....
 const limiter = rateLimit({
 	windowMs: 60 * 1000,
-	max: 5,
+	max: 2,
 	message: "Trop de requêtes, réessaie plus tard.",
 });
 
@@ -65,7 +65,6 @@ app.use("/send-reset-code", limiter);
 app.use("/validate-reset-code", limiter);
 
 // Mise en place du router
-app.use(limiter);
 app.use(router);
 
 io.on("connection", (socket) => {
