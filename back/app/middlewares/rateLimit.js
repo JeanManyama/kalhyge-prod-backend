@@ -1,8 +1,8 @@
 import rateLimit from "express-rate-limit";
 
-// ================== SIGNUP LIMITER (express-rate-limit simple) ==================
+// ================== SIGNUP LIMITER (simple anti-spam) ==================
 export const signupLimiter = rateLimit({
-	windowMs: 60 * 1000, // 1 min
+	windowMs: 60 * 1000, // 1 minute
 	max: 5,
 	message: "Trop d'inscriptions, réessaie plus tard.",
 	standardHeaders: true,
@@ -17,47 +17,7 @@ export const getClientIp = (req) => {
 	return req.ip || req.connection?.remoteAddress;
 };
 
-// ================== SIGNUP BRUTE FORCE ==================
-const signupAttempts = new Map();
-
-export const signupProtection = (req, res, next) => {
-	const ip = getClientIp(req);
-	const now = Date.now();
-
-	const data = signupAttempts.get(ip);
-
-	if (data?.blockedUntil && now < data.blockedUntil) {
-		console.log("SIGNUP BLOCK ACTIVE:", ip);
-
-		return res.status(429).json({
-			message: "Trop d'inscriptions, réessaie plus tard.",
-		});
-	}
-
-	next();
-};
-
-export const registerSignupAttempt = (ip) => {
-	const now = Date.now();
-	const data = signupAttempts.get(ip) || { count: 0 };
-
-	data.count += 1;
-
-	console.log("SIGNUP ATTEMPT:", ip, "COUNT:", data.count);
-
-	if (data.count >= 5) {
-		data.blockedUntil = now + 15 * 60 * 1000; // 15 min
-		console.log("SIGNUP BLOCKED:", ip);
-	}
-
-	signupAttempts.set(ip, data);
-};
-
-export const resetSignupAttempts = (ip) => {
-	signupAttempts.delete(ip);
-};
-
-// ================== SIGNIN BRUTE FORCE ==================
+// ================== LOGIN BRUTE FORCE (SECURITE IMPORTANTE) ==================
 const loginAttempts = new Map();
 
 export const bruteForceProtection = (req, res, next) => {
@@ -86,7 +46,7 @@ export const registerFailedAttempt = (ip) => {
 	console.log("LOGIN ATTEMPT:", ip, "COUNT:", data.count);
 
 	if (data.count >= 5) {
-		data.blockedUntil = now + 15 * 60 * 1000;
+		data.blockedUntil = now + 15 * 60 * 1000; // 15 min
 		console.log("LOGIN BLOCKED:", ip);
 	}
 
