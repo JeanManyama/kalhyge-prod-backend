@@ -9,6 +9,8 @@ import { router } from "./app/routers/index.js";
 const app = express();
 const server = createServer(app);
 
+app.set("trust proxy", 1);
+
 // Configration CORS dynamique.....
 const allowedOrigins = [
 	"http://localhost:3000",
