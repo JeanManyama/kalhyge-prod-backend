@@ -46,8 +46,11 @@ export const registerFailedAttempt = (ip) => {
 
 	data.count += 1;
 
+	console.log("ATTEMPT:", ip, "COUNT:", data.count);
+
 	if (data.count >= 5) {
-		data.blockedUntil = now + 15 * 60 * 1000; // 15 min
+		data.blockedUntil = now + 15 * 60 * 1000;
+		console.log("BLOCKED:", ip);
 	}
 
 	loginAttempts.set(ip, data);
