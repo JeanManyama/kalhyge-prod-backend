@@ -27,14 +27,16 @@ export const bruteForceProtection = (req, res, next) => {
 
 	const data = loginAttempts.get(ip);
 
+	if (data) {
+		console.log("CHECK BLOCK:", ip, data);
+	}
+
 	if (data?.blockedUntil && now < data.blockedUntil) {
+		console.log("BLOCK ACTIVE:", ip);
+
 		return res.status(429).json({
 			message: "Trop de tentatives, réessaie plus tard.",
 		});
-	}
-
-	if (data?.blockedUntil && now > data.blockedUntil) {
-		loginAttempts.delete(ip);
 	}
 
 	next();
@@ -50,7 +52,7 @@ export const registerFailedAttempt = (ip) => {
 
 	if (data.count >= 5) {
 		data.blockedUntil = now + 15 * 60 * 1000;
-		console.log("BLOCKED:", ip);
+		console.log("----------------BLOCKED:", ip);
 	}
 
 	loginAttempts.set(ip, data);
