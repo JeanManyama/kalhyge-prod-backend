@@ -16,6 +16,8 @@ const limiter = rateLimit({
 	message: "Trop de requêtes, réessaie plus tard.",
 });
 
+app.set("trust proxy", 1);
+
 // Configration CORS dynamique.....
 const allowedOrigins = [
 	"http://localhost:3000",
