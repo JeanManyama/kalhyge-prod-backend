@@ -6,7 +6,9 @@ import tokens from "../lib/tokens.js";
 import {
 	getClientIp,
 	registerFailedAttempt,
+	registerSignupAttempt,
 	resetAttempts,
+	resetSignupAttempts,
 } from "../middlewares/rateLimit.js";
 import { Role, User } from "../models/index.js";
 
@@ -40,6 +42,7 @@ export default {
 
 	// SIGNUP----------------------------------------------
 	async signupUser(req, res) {
+		const ip = getClientIp(req);
 		// Validation du corps de la requête
 		const { data, error } = await schemas
 			.buildSignupBodySchema()
@@ -57,11 +60,13 @@ export default {
 		// Vérifier si l'email est déjà utilisé
 		const nbOfUsersWithSameEmail = await User.count({ where: { email } });
 		if (nbOfUsersWithSameEmail !== 0) {
+			registerSignupAttempt(ip);
 			return res.status(409).json({ status: 409, message: "Email existant" });
 		}
 
 		// Créer un nouvel utilisateur
 		const role = 2;
+		resetSignupAttempts(ip);
 		await User.create({
 			firstname,
 			email,

@@ -18,7 +18,51 @@ export const getClientIp = (req) => {
 	);
 };
 
-// ------------------ BRUTE FORCE ------------------
+// ------------------ SIGNUP BRUTE FORCE ------------------
+const signupAttempts = new Map();
+
+export const signupProtection = (req, res, next) => {
+	const ip = getClientIp(req);
+	const now = Date.now();
+
+	const data = signupAttempts.get(ip);
+
+	if (data) {
+		console.log("SIGNUP CHECK:", ip, data);
+	}
+
+	if (data?.blockedUntil && now < data.blockedUntil) {
+		console.log("SIGNUP BLOCKED:", ip);
+
+		return res.status(429).json({
+			message: "Trop d'inscriptions, réessaie plus tard.",
+		});
+	}
+
+	next();
+};
+
+export const registerSignupAttempt = (ip) => {
+	const now = Date.now();
+	const data = signupAttempts.get(ip) || { count: 0 };
+
+	data.count++;
+
+	console.log("SIGNUP ATTEMPT:", ip, data.count);
+
+	if (data.count >= 5) {
+		data.blockedUntil = now + 15 * 60 * 1000;
+		console.log("SIGNUP BLOCKED:", ip);
+	}
+
+	signupAttempts.set(ip, data);
+};
+
+export const resetSignupAttempts = (ip) => {
+	signupAttempts.delete(ip);
+};
+
+// ------------------SIGNIN BRUTE FORCE ------------------
 const loginAttempts = new Map();
 
 export const bruteForceProtection = (req, res, next) => {
