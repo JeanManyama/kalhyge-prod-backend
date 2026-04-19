@@ -9,8 +9,6 @@ import { router } from "./app/routers/index.js";
 const app = express();
 const server = createServer(app);
 
-app.set("trust proxy", true);
-
 // Limitation des requettes.....
 // const limiter = rateLimit({
 // 	windowMs: 60 * 1000,
