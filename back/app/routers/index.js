@@ -1,4 +1,5 @@
 import { Router } from "express";
+import rateLimit from "express-rate-limit";
 import articleController from "../controllers/articleController.js";
 import machineController from "../controllers/machineController.js";
 import productionController from "../controllers/productionController.js";
@@ -11,13 +12,21 @@ import error404 from "../middlewares/error404.js";
 
 const router = Router();
 
+// Limit de requettes
+app.set("trust proxy", true);
+const authLimiter = rateLimit({
+	windowMs: 60 * 1000,
+	max: 5,
+	message: "Trop de requêtes, réessaie plus tard.",
+});
+
 //AUTHENTIFICATION---------------------------------------------
 router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
 	res.status(200).json({ message: "admin" });
 });
 router.get("/users", isAuthenticated, userController.getAllUsers);
-router.post("/signup", userController.signupUser);
-router.post("/signin", userController.loginUser);
+router.post("/signup", authLimiter, userController.signupUser);
+router.post("/signin", authLimiter, userController.loginUser);
 router.get("/me", userController.getUserInfo);
 router.post("/logOut", userController.logout);
 router.patch(
@@ -27,8 +36,12 @@ router.patch(
 );
 
 // Mot de passe oublier
-router.post("/send-reset-code", userController.sendResetCode);
-router.post("/validate-reset-code", userController.validateResetCode);
+router.post("/send-reset-code", authLimiter, userController.sendResetCode);
+router.post(
+	"/validate-reset-code",
+	authLimiter,
+	userController.validateResetCode,
+);
 
 // Route pour les machines
 router.get(

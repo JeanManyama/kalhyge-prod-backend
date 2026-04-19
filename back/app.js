@@ -2,21 +2,40 @@ import "dotenv/config";
 import { createServer } from "node:http";
 import cors from "cors";
 import express from "express";
-import rateLimit from "express-rate-limit";
+// import rateLimit from "express-rate-limit";
 import { Server as socketIo } from "socket.io";
 import { router } from "./app/routers/index.js";
 
 const app = express();
 const server = createServer(app);
 
-// Limitation des requettes.....
-const limiter = rateLimit({
-	windowMs: 60 * 1000,
-	max: 1,
-	message: "Trop de requêtes, réessaie plus tard.",
-});
+app.set("trust proxy", true);
 
-app.set("trust proxy", 1);
+// Limitation des requettes.....
+// const limiter = rateLimit({
+// 	windowMs: 60 * 1000,
+// 	max: 2,
+// 	keyGenerator: (req) => req.ip,
+// 	message: "Trop de requêtes, réessaie plus tard.",
+// });
+
+// app.use((req, _res, next) => {
+//   console.log("REQ:", req.method, req.originalUrl);
+//   next();
+// });
+// app.use((req, _res, next) => {
+// 	console.log("IP vue:", req.ip);
+// 	next();
+// });
+
+// router.get("/test-limit", limiter, (_req, res) => {
+// 	res.json({ ok: true });
+// });
+
+// app.use((req, _res, next) => {
+// 	console.log("ROUTE HIT:", req.originalUrl);
+// 	next();
+// });
 
 // Configration CORS dynamique.....
 const allowedOrigins = [
@@ -61,10 +80,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // protection des routes sensibles contre les abus
-app.use("/signup", limiter);
-app.use("/signin", limiter);
-app.use("/send-reset-code", limiter);
-app.use("/validate-reset-code", limiter);
+// app.use("/signup", limiter);
+// app.use("/api/signin", limiter);
+// app.use("/send-reset-code", limiter);
+// app.use("/validate-reset-code", limiter);
 
 // Mise en place du router
 app.use(router);
