@@ -1,6 +1,6 @@
 import rateLimit from "express-rate-limit";
 
-// ================== SIGNUP LIMITER (simple anti-spam) ==================
+//  SIGNUP LIMITER (simple anti-spam) ICI
 export const signupLimiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 5,
@@ -9,7 +9,7 @@ export const signupLimiter = rateLimit({
 	legacyHeaders: false,
 });
 
-// ================== GET REAL IP ==================
+//  GET REAL IP ICI
 export const getClientIp = (req) => {
 	const forwarded = req.headers["x-forwarded-for"];
 	if (forwarded) return forwarded.split(",")[0].trim();
@@ -17,7 +17,7 @@ export const getClientIp = (req) => {
 	return req.ip || req.connection?.remoteAddress;
 };
 
-// ================== LOGIN BRUTE FORCE (SECURITE IMPORTANTE) ==================
+//  LOGIN BRUTE FORCE (SECURITE IMPORTANTE) ICI
 const loginAttempts = new Map();
 
 export const bruteForceProtection = (req, res, next) => {
@@ -27,7 +27,7 @@ export const bruteForceProtection = (req, res, next) => {
 	const data = loginAttempts.get(ip);
 
 	if (data?.blockedUntil && now < data.blockedUntil) {
-		console.log("LOGIN BLOCK ACTIVE:", ip);
+		console.log("MON LOGIN BLOCK ACTIVE:", ip);
 
 		return res.status(429).json({
 			message: "Trop de tentatives, réessaie plus tard.",
