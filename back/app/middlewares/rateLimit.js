@@ -4,7 +4,7 @@ import rateLimit from "express-rate-limit";
 export const signupLimiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 5,
-	message: "Trop d'inscriptions, réessaie plus tard.",
+	message: "⛔ Trop de créations de compte. Réessaie dans 1 minute.",
 	standardHeaders: true,
 	legacyHeaders: false,
 });
@@ -30,7 +30,7 @@ export const bruteForceProtection = (req, res, next) => {
 		console.log("MON LOGIN BLOCK ACTIVE:", ip);
 
 		return res.status(429).json({
-			message: "Trop de tentatives, réessaie plus tard.",
+			message: "⛔ Trop de tentatives. Compte bloqué temporairement.",
 		});
 	}
 

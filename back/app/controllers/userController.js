@@ -70,9 +70,7 @@ export default {
 		});
 
 		// Réponse au client
-		res
-			.status(201)
-			.json({ status: 201, message: "Le compte a été crée avec succès" });
+		res.status(201).json({ message: "Le compte a été crée avec succès" });
 	},
 	// SIGNIN----------------------------------------------
 	async loginUser(req, res) {
@@ -95,7 +93,7 @@ export default {
 			registerFailedAttempt(ip);
 			return res
 				.status(401)
-				.json({ status: 401, message: "Erreur d'authtification" });
+				.json({ status: 401, message: "Identifiants incorrects" });
 		}
 
 		const isMatching = await cryptos.compare(password, user.password);
@@ -104,7 +102,7 @@ export default {
 			registerFailedAttempt(ip);
 			return res
 				.status(401)
-				.json({ status: 401, message: "Erreur d'authtification" });
+				.json({ status: 401, message: "Identifiants incorrects" });
 		}
 		//Login ok
 		resetAttempts(ip);
