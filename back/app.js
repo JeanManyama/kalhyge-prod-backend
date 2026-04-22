@@ -15,7 +15,7 @@ app.set("trust proxy", 1);
 const allowedOrigins = [
 	"http://localhost:3000",
 	"http://localhost:5173",
-	"https://kalhyge-production.surge.sh",
+	// "https://kalhyge-production.surge.sh",
 ];
 
 const corsOptions = {
