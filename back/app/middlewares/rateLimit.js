@@ -1,6 +1,6 @@
 import rateLimit from "express-rate-limit";
 
-//  SIGNUP LIMITER (simple anti-spam) ICI
+//  signup limiter (simple anti-spam) ICI
 export const signupLimiter = rateLimit({
 	windowMs: 60 * 1000, // 1 minute
 	max: 5,
@@ -17,7 +17,7 @@ export const getClientIp = (req) => {
 	return req.ip || req.connection?.remoteAddress;
 };
 
-//  LOGIN BRUTE FORCE (SECURITE IMPORTANTE) ICI
+//  login brute force (SECURITE IMPORTANTE) ICI
 const loginAttempts = new Map();
 
 export const bruteForceProtection = (req, res, next) => {
@@ -34,6 +34,11 @@ export const bruteForceProtection = (req, res, next) => {
 		});
 	}
 
+	// reset automatique après blocage
+	if (data?.blockedUntil && now >= data.blockedUntil) {
+		loginAttempts.delete(ip);
+	}
+
 	next();
 };
 
@@ -46,7 +51,7 @@ export const registerFailedAttempt = (ip) => {
 	console.log("LOGIN ATTEMPT:", ip, "COUNT:", data.count);
 
 	if (data.count >= 5) {
-		data.blockedUntil = now + 15 * 60 * 1000; // 15 min
+		data.blockedUntil = now + 5 * 60 * 1000; // 5 min
 		console.log("LOGIN BLOCKED:", ip);
 	}
 
