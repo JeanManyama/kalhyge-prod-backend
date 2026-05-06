@@ -15,6 +15,16 @@ import {
 
 const router = Router();
 
+// ✅ ROUTE HEALTH
+router.get("/health", (_req, res) => {
+	res.status(200).json({
+		status: "ok",
+		uptime: process.uptime(),
+		service: "kalhyge-api",
+		timestamp: new Date().toISOString(),
+	});
+});
+
 //AUTHENTIFICATION---------------------------------------------
 router.get("/checkRole", isAuthenticated, isAdmin, (_req, res) => {
 	res.status(200).json({ message: "admin" });
