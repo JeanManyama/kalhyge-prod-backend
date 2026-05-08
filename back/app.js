@@ -11,7 +11,7 @@ const server = createServer(app);
 
 app.set("trust proxy", 1);
 
-// Configration CORS dynamique.....
+// Configration CORS dynamique.................
 const allowedOrigins = [
 	"http://localhost:3000",
 	"http://localhost:5173",
