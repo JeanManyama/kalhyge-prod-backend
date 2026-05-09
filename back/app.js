@@ -54,7 +54,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // protection des routes sensibles contre les abus
-// app.use("/signup", limiter);
+// app.use("/signup", limiter);;;;;;;;;;;;
 // app.use("/api/signin", limiter);
 // app.use("/send-reset-code", limiter);
 // app.use("/validate-reset-code", limiter);
