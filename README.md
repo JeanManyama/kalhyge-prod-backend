@@ -28,7 +28,6 @@ Client (React) → API REST (Express) → PostgreSQL
 - PostgreSQL
 - Socket.IO
 - JWT / Authentification
-- bcrypt
 - dotenv
 
 ---
