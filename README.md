@@ -8,8 +8,8 @@ Cette API permet de gérer les utilisateurs, machines, productions, articles, re
 
 ## 🚀 URL de production
 
-🌐 API : https://api-kalhygee.onrender.com  
-🩺 Health check : [Kalhyge-Prod API](https://api-kalhygee.onrender.com/health)
+🌐 API : [Kalhyge-Prod API](https://api-kalhygee.onrender.com)  
+🩺 Health check : [Kalhyge-Prod API /health](https://api-kalhygee.onrender.com/health)
 
 ---
 
